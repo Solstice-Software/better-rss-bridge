@@ -26,6 +26,9 @@ $I18N = [
      * If the translation is marked complete, then missing items returning
      *   an empty string or null object will cause the application to crash.
      * 
+     * This behavior only occurs when the configuration has the key
+     *   'enforce_complete_translations' set to 'true'.
+     * 
      * BE CAREFUL.
      */
     'complete' => true,   /* is this translation complete? */
@@ -55,6 +58,12 @@ $I18N = [
     'connectivity' => [ /* the connectivity template */
         'search_for_bridge' => 'Search for bridge...',
     ],
+    'default_inputs' => [
+        'limit' => [
+            'name' => 'limit',
+            'title' => 'Maximum number of items to return',
+        ],
+    ],
     'errors' => [   /* error messages */
         'general' => [
             'missing_config_option' => 'Missing configuration option: %s',
@@ -66,7 +75,7 @@ $I18N = [
             'whitelist' => 'This bridge is not whitelisted.',
             'format' => 'You must specify a format.',
             'not_found' => 'Bridge not found.',
-            'not_found_named' => 'Bridge "%s" not found.',
+            'not_found_named' => 'Bridge "%s" was not found.',
             'not_found_for_url' => 'No bridge was found for the given URL',
             'missing_parameter' => 'Missing bridge parameter.',
             'specify_url' => 'You must specify a URL.',

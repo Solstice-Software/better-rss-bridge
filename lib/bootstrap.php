@@ -1,10 +1,5 @@
 <?php
 
-// Cheat and pre-load English i18n settings before getting the config.
-if (is_file(__DIR__ . '/../i18n/en-US.php')) {
-    require __DIR__ . '/../i18n/en-US.php';
-}
-
 if (is_file(__DIR__ . '/../vendor/autoload.php')) {
     require __DIR__ . '/../vendor/autoload.php';
 }
@@ -58,14 +53,5 @@ if (file_exists(__DIR__ . '/../config.ini.php')) {
 }
 Configuration::loadConfiguration($customConfig, getenv());
 
-
-// Load i18n information.
-$languageCode = Configuration::getConfig('system', 'app_language', 'en-US');
-if (is_file(__DIR__ . '/../i18n/' . $languageCode . '.php')) {
-    unset($I18N);
-    require __DIR__ . '/../i18n/' . $languageCode . '.php';
-} else {
-    http_response_code(500);
-    print 'Unable to source i18n language information. Check the application\'s configuration.';
-    exit;
-}
+// Load internationalization settings and information.
+I18n::load();

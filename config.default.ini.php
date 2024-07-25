@@ -48,6 +48,10 @@ enable_maintenance_mode = false
 ; The default language to use for the application's web UI (locale and region; e.g. 'en-US').
 app_language = en-US
 
+; Whether to throw an app exception when a translation text item is missing from an i18n
+;  language file that has 'complete' set to 'true'.
+enforce_complete_translations = true
+
 [http]
 ; Operation timeout in seconds
 timeout = 15

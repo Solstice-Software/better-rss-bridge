@@ -2,15 +2,22 @@
 
 abstract class BridgeAbstract
 {
-    const NAME = 'Unnamed bridge';
+    /* 
+     * i18n note: because this abstract class uses CONST, translations here cannot be
+     *   dynamic without fundamentally changing this structure. Instead, the text of each
+     *   translated item is prepended with a 'magic' value from the i18n.php library.
+     *   This causes the library to treat the text as a selector dynamically when calling
+     *   the 'I18n::dynamic_select' method.
+     */
+    const NAME = I18n::SELECTOR_MAGIC . 'bridge_default:name';
     const URI = '';
     const DONATION_URI = '';
-    const DESCRIPTION = 'No description provided';
+    const DESCRIPTION = I18n::SELECTOR_MAGIC . 'bridge_default:description';
 
     /**
      * Preferably a github username
      */
-    const MAINTAINER = 'No maintainer';
+    const MAINTAINER = I18n::SELECTOR_MAGIC . 'bridge_default:no_maintainer';
 
     /**
      * Cache TTL in seconds
@@ -26,9 +33,9 @@ abstract class BridgeAbstract
      * Can be inlined and modified if necessary.
      */
     protected const LIMIT = [
-        'name'          => 'Limit',
+        'name'          => I18n::SELECTOR_MAGIC . 'default_inputs:limit:name',
         'type'          => 'number',
-        'title'         => 'Maximum number of items to return',
+        'title'         => I18n::SELECTOR_MAGIC . 'default_inputs:limit:title',
     ];
 
     protected array $items = [];
@@ -61,7 +68,7 @@ abstract class BridgeAbstract
 
     public function getName()
     {
-        return static::NAME;
+        return I18n::dynamic_select(static::NAME);
     }
 
     public function getURI()
@@ -93,12 +100,12 @@ abstract class BridgeAbstract
      */
     public function getDescription()
     {
-        return select_i18n_str(static::DESCRIPTION);
+        return I18n::dynamic_select(static::DESCRIPTION);
     }
 
     public function getMaintainer(): string
     {
-        return static::MAINTAINER;
+        return I18n::dynamic_select(static::MAINTAINER);
     }
 
     /**
