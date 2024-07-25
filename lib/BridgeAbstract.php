@@ -93,7 +93,7 @@ abstract class BridgeAbstract
      */
     public function getDescription()
     {
-        return static::DESCRIPTION;
+        return select_i18n_str(static::DESCRIPTION);
     }
 
     public function getMaintainer(): string

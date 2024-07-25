@@ -130,7 +130,10 @@ final class BridgeCard
 
                 $idArg = 'arg-' . urlencode($bridgeClassName) . '-' . urlencode($contextName) . '-' . urlencode($id);
 
-                $inputName = filter_var($inputEntry['name'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                // If the name is an array, apply i18n. Else, process it 'normally'.
+                $inputEntryName = select_i18n_str($inputEntry['name']);
+                $inputName = filter_var($inputEntryName, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
                 $form .= '<label for="' . $idArg . '">' . $inputName . '</label>' . PHP_EOL;
 
                 if (
