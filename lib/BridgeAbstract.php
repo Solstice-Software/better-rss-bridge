@@ -131,7 +131,7 @@ abstract class BridgeAbstract
             }
 
             if (isset($optionValue['required']) && $optionValue['required'] === true) {
-                throw new \Exception(sprintf('Missing configuration option: %s', $optionName));
+                throw new \Exception(xlat('errors:general:missing_config_option', $optionName));
             } elseif (isset($optionValue['defaultValue'])) {
                 $this->configuration[$optionName] = $optionValue['defaultValue'];
             }
@@ -152,7 +152,7 @@ abstract class BridgeAbstract
 
         if (!$contexts) {
             if ($input) {
-                throw new \Exception('Invalid parameters value(s)');
+                throw new \Exception(xlat('errors:general:invalid_context'));
             }
             return;
         }
@@ -163,7 +163,12 @@ abstract class BridgeAbstract
         $errors = $validator->validateInput($input, $contexts);
         if ($errors !== []) {
             $invalidParameterKeys = array_column($errors, 'name');
-            throw new \Exception(sprintf('Invalid parameters value(s): %s', implode(', ', $invalidParameterKeys)));
+            throw new \Exception(
+                xlat(
+                    'errors:general:invalid_context_args',
+                    implode(', ', $invalidParameterKeys)
+                )
+            );
         }
 
         // Guess the context from input data
@@ -173,9 +178,9 @@ abstract class BridgeAbstract
         }
 
         if (is_null($this->queriedContext)) {
-            throw new \Exception('Required parameter(s) missing');
+            throw new \Exception(xlat('errors:general:missing_context'));
         } elseif ($this->queriedContext === false) {
-            throw new \Exception('Mixed context parameters');
+            throw new \Exception(xlat('errors:general:mixed_context'));
         }
 
         $this->setInputWithContext($input, $this->queriedContext);

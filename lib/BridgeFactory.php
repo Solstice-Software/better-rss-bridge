@@ -22,7 +22,7 @@ final class BridgeFactory
 
         $enabledBridges = Configuration::getConfig('system', 'enabled_bridges');
         if ($enabledBridges === null) {
-            throw new \Exception('No bridges are enabled...');
+            throw new \Exception(xlat('errors:general:no_bridges_enabled'));
         }
         foreach ($enabledBridges as $enabledBridge) {
             if ($enabledBridge === '*') {
@@ -34,7 +34,7 @@ final class BridgeFactory
                 $this->enabledBridges[] = $bridgeClassName;
             } else {
                 $this->missingEnabledBridges[] = $enabledBridge;
-                $this->logger->info(sprintf('Bridge not found: %s', $enabledBridge));
+                $this->logger->info(xlat('errors:general:not_found_named', $enabledBridge));
             }
         }
     }

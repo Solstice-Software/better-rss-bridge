@@ -26,12 +26,12 @@ final class Url
     public static function fromString(string $url): self
     {
         if (!self::validate($url)) {
-            throw new UrlException(sprintf('Illegal url: "%s"', $url));
+            throw new UrlException(xlat('errors:url:illegal', $url));
         }
 
         $parts = parse_url($url);
         if ($parts === false) {
-            throw new UrlException(sprintf('Failed to parse_url(): %s', $url));
+            throw new UrlException(xlat('errors:url:parse', $url));
         }
 
         return (new self())
@@ -85,7 +85,7 @@ final class Url
     public function withScheme(string $scheme): self
     {
         if (!in_array($scheme, ['http', 'https'])) {
-            throw new UrlException(sprintf('Invalid scheme %s', $scheme));
+            throw new UrlException(xlat('errors:url:scheme', $scheme));
         }
         $clone = clone $this;
         $clone->scheme = $scheme;
@@ -109,7 +109,7 @@ final class Url
     public function withPath(string $path): self
     {
         if (!str_starts_with($path, '/')) {
-            throw new UrlException(sprintf('Path must start with forward slash: %s', $path));
+            throw new UrlException(xlat('errors:url:path_slash', $path));
         }
         $clone = clone $this;
         $clone->path = $path;

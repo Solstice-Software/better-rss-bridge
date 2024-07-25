@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="<?= $charset ?>">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/ >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="RSS-Bridge" />
     <title><?= e($title) ?></title>
     <link href="static/style.css?2023-03-24" rel="stylesheet">
@@ -31,7 +31,7 @@
 
         <div class="buttons">
             <a href="./#bridge-<?= $_GET['bridge'] ?>">
-                <button class="backbutton">← back to rss-bridge</button>
+                <button class="backbutton">← <?= xlat('misc:back_to_frontpage') ?></button>
             </a>
 
             <?php foreach ($formats as $format): ?>
@@ -45,7 +45,7 @@
             <?php if ($donation_uri): ?>
                 <a href="<?= e($donation_uri) ?>">
                     <button class="rss-feed">
-                        Donate to maintainer
+                        <?= xlat('misc:donate_maintainer') ?>
                     </button>
                 </a>
             <?php endif; ?>
@@ -68,7 +68,7 @@
                 <?php endif; ?>
 
                 <?php if ($item['author']): ?>
-                    <p class="author">by: <?= e($item['author']) ?></p>
+                    <p class="author"><?= xlat('misc:author_by') ?>: <?= e($item['author']) ?></p>
                 <?php endif; ?>
 
                 <!-- Intentionally not escaping for html context -->
@@ -76,7 +76,7 @@
 
                 <?php if ($item['enclosures']): ?>
                     <div class="attachments">
-                        <p>Attachments:</p>
+                        <p><?= ucwords(xlat('misc:attachments')) ?>:</p>
                         <?php foreach ($item['enclosures'] as $enclosure): ?>
                             <li class="enclosure">
                                 <a href="<?= e($enclosure) ?>" rel="noopener noreferrer nofollow">
@@ -89,7 +89,7 @@
 
                 <?php if ($item['categories']): ?>
                     <div class="categories">
-                        <p>Categories:</p>
+                        <p><?= ucwords(xlat('misc:categories')) ?>:</p>
                         <?php foreach ($item['categories'] as $category): ?>
                             <li class="category"><?= e($category) ?></li>
                         <?php endforeach; ?>

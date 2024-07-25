@@ -16,20 +16,22 @@ final class BridgeCard
 
         if (Configuration::getConfig('proxy', 'url') && Configuration::getConfig('proxy', 'by_bridge')) {
             $contexts['global']['_noproxy'] = [
-                'name' => 'Disable proxy (' . (Configuration::getConfig('proxy', 'name') ?: Configuration::getConfig('proxy', 'url')) . ')',
+                'name' => xlat('bridge_card:proxy_disable') . ' ('
+                            . (Configuration::getConfig('proxy', 'name') ?: Configuration::getConfig('proxy', 'url')) . ')',
                 'type' => 'checkbox'
             ];
         }
 
         if (Configuration::getConfig('cache', 'custom_timeout')) {
             $contexts['global']['_cache_timeout'] = [
-                'name' => 'Cache timeout in seconds',
+                'name' => xlat('bridge_card:cache_timeout'),
                 'type' => 'number',
                 'defaultValue' => $bridge->getCacheTimeout()
             ];
         }
 
         $shortName = $bridge->getShortName();
+        $showMore = ucfirst(xlat('misc:show_more')) ?: 'Show more';
         $card = <<<CARD
             <section
                 class="bridge-card"
@@ -42,7 +44,7 @@ final class BridgeCard
             <p class="description">{$description}</p>
 
             <input type="checkbox" class="showmore-box" id="showmore-{$bridgeClassName}" />
-            <label class="showmore" for="showmore-{$bridgeClassName}">Show more</label>
+            <label class="showmore" for="showmore-{$bridgeClassName}">{$showMore}</label>
 
 
         CARD;
@@ -76,13 +78,15 @@ final class BridgeCard
             }
         }
 
-        $card .= sprintf('<label class="showless" for="showmore-%s">Show less</label>', $bridgeClassName);
+        $showLess = ucfirst(xlat('misc:show_less')) ?: 'Show less';
+        $card .= sprintf('<label class="showless" for="showmore-%s">%s</label>', $bridgeClassName, $showLess);
 
         if (Configuration::getConfig('admin', 'donations') && $bridge->getDonationURI()) {
             $card .= sprintf(
-                '<p class="maintainer">%s ~ <a href="%s">Donate</a></p>',
+                '<p class="maintainer">%s ~ <a href="%s">%s</a></p>',
                 $bridge->getMaintainer(),
-                $bridge->getDonationURI()
+                $bridge->getDonationURI(),
+                xlat('misc:donate') ?: 'Donate'
             );
         } else {
             $card .= sprintf('<p class="maintainer">%s</p>', $bridge->getMaintainer());
@@ -151,7 +155,8 @@ final class BridgeCard
                     $infoText[] = filter_var($inputEntry['title'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                 }
                 if ($inputEntry['exampleValue'] !== '') {
-                    $infoText[] = "Example (right click to use):\n" . filter_var($inputEntry['exampleValue'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                    $infoText[] = xlat('bridge_card:example_right_click') . ":\n"
+                        . filter_var($inputEntry['exampleValue'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                     $infoTextScript = 'rssbridge_use_placeholder_value(this);';
                 }
 
@@ -165,7 +170,8 @@ final class BridgeCard
             $form .= '</div>';
         }
 
-        $form .= '<button type="submit" name="format" formtarget="_blank" value="Html">Generate feed</button>';
+        $form .= '<button type="submit" name="format" formtarget="_blank" value="Html">'
+                    . ucfirst(xlat('bridge_card:generate_feed')) . '</button>';
 
         return $form . '</form>' . PHP_EOL;
     }

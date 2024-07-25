@@ -5,114 +5,79 @@
 ?>
 <div class="error">
 
-    <?php if ($e instanceof HttpException): ?>
-        <?php if ($e instanceof CloudFlareException): ?>
-            <h2>The website is protected by CloudFlare</h2>
-            <p>
-                RSS-Bridge tried to fetch a website.
-                The fetching was blocked by CloudFlare.
-                CloudFlare is anti-bot software.
-                Its purpose is to block non-humans.
-            </p>
-        <?php endif; ?>
-
-        <?php if ($e->getCode() === 400): ?>
-            <h2>400 Bad Request</h2>
-            <p>
-                This is usually caused by an incorrectly constructed http request.
-            </p>
-        <?php endif; ?>
-
-        <?php if ($e->getCode() === 403): ?>
-            <h2>403 Forbidden</h2>
-            <p>
-                The HTTP 403 Forbidden response status code indicates that the
-                server understands the request but refuses to authorize it.
-            </p>
-        <?php endif; ?>
-
-        <?php if ($e->getCode() === 404): ?>
-            <h2>404 Page Not Found</h2>
-            <p>
-                RSS-Bridge tried to fetch a page on a website.
-                But it doesn't exists.
-            </p>
-        <?php endif; ?>
-
-        <?php if ($e->getCode() === 429): ?>
-            <h2>429 Too Many Requests</h2>
-            <p>
-                RSS-Bridge tried to fetch a website.
-                They told us to try again later.
-            </p>
-        <?php endif; ?>
-
-        <?php if ($e->getCode() === 503): ?>
-            <h2>503 Service Unavailable</h2>
-            <p>
-                Common causes are a server that is down for maintenance
-                or that is overloaded.
-            </p>
-        <?php endif; ?>
-
-        <?php if ($e->getCode() === 0): ?>
-            <p>
-                See
-                <a href="https://curl.haxx.se/libcurl/c/libcurl-errors.html">
-                    https://curl.haxx.se/libcurl/c/libcurl-errors.html
-                </a>
-                for description of the curl error code.
-            </p>
-        <?php else: ?>
-            <p>
-                <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/<?= raw($e->getCode()) ?>">
-                    https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/<?= raw($e->getCode()) ?>
-                </a>
-            </p>
-        <?php endif; ?>
-
-    <?php else: ?>
-        <?php if ($e->getCode() === 10): ?>
-            <h2>The rss feed is completely empty</h2>
-            <p>
-                RSS-Bridge tried parse the empty string as xml.
-                The fetched url is not pointing to real xml.
-            </p>
-        <?php endif; ?>
-
-        <?php if ($e->getCode() === 11): ?>
-            <h2>There is something wrong with the rss feed</h2>
-            <p>
-                RSS-Bridge tried parse xml. It failed. The xml is probably broken.
-            </p>
-        <?php endif; ?>
+    <?php if ($e instanceof CloudFlareException): ?>
+        <h2><?= xlat('errors:cloudflare:protected') ?></h2>
+        <p><?= xlat('errors:cloudflare:reason') ?></p>
     <?php endif; ?>
 
-    <h2>Details</h2>
+    <?php
+        switch ($e->getCode()) {
+            // Generally speaking, we can safely assume any HttpException with
+            //   the codes 10 or 11 are not valid (since it is always 3 digits).
+            case 10:
+            case 11:
+                if ($e instanceof HttpException) {
+                    print '<p>???</p>';
+                    break;
+                }
+                $e_banner = xlat('errors:curl:e' . $e->getCode() . ':banner');
+                $e_reason = xlat('errors:curl:e' . $e->getCode() . ':reason');
+                print "<h2>{$e_banner}</h2><p>{$e_reason}</p>";
+                break;
+            case 400:
+            case 403:
+            case 404:
+            case 429:
+            case 503:
+                $e_banner = xlat('errors:http_exceptions:e' . $e->getCode() . ':banner');
+                $e_reason = xlat('errors:http_exceptions:e' . $e->getCode() . ':reason');
+                print "<h2>{$e_banner}</h2><p>{$e_reason}</p>";
+                break;
+            case 0:
+                $e_msg = xlat('errors:curl:see_libcurl_errors_doc');
+                echo <<<CONTENT
+                    {$e_msg}
+                    <a href="https://curl.haxx.se/libcurl/c/libcurl-errors.html">
+                        https://curl.haxx.se/libcurl/c/libcurl-errors.html
+                    </a>
+CONTENT;
+                break;
+            default:
+                $e_rawCode = raw($e->getCode());
+                echo <<<CONTENT
+                    <p><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{$e_rawCode}">
+                        https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{$e_rawCode}
+                    </a></p>
+CONTENT;
+                break;
+        }
+    ?>
+
+    <h2><?= ucwords(xlat('misc:details')) ?></h2>
 
     <div style="margin-bottom: 15px">
         <div class="error-type">
-            <strong>Type:</strong> <?= e(get_class($e)) ?>
+            <strong><?= ucwords(xlat('misc:type')) ?>:</strong> <?= e(get_class($e)) ?>
         </div>
 
         <div>
-            <strong>Code:</strong> <?= e($e->getCode()) ?>
+            <strong><?= ucwords(xlat('misc:code')) ?>:</strong> <?= e($e->getCode()) ?>
         </div>
 
         <div class="error-message">
-            <strong>Message:</strong> <?= e(sanitize_root($e->getMessage())) ?>
+            <strong><?= ucwords(xlat('misc:message')) ?>:</strong> <?= e(sanitize_root($e->getMessage())) ?>
+        </div>
+
+        <div>   
+            <strong><?= ucwords(xlat('misc:file')) ?>:</strong> <?= e(sanitize_root($e->getFile())) ?>
         </div>
 
         <div>
-            <strong>File:</strong> <?= e(sanitize_root($e->getFile())) ?>
-        </div>
-
-        <div>
-            <strong>Line:</strong> <?= e($e->getLine()) ?>
+            <strong><?= ucwords(xlat('misc:line')) ?>:</strong> <?= e($e->getLine()) ?>
         </div>
     </div>
 
-    <h2>Trace</h2>
+    <h2><?= ucwords(xlat('misc:trace')) ?></h2>
 
     <?php foreach (trace_from_exception($e) as $i => $frame) : ?>
         <code>
@@ -123,26 +88,26 @@
 
     <br>
 
-    <h2>Context</h2>
+    <h2><?= ucwords(xlat('misc:context')) ?></h2>
 
     <div>
-        <strong>Query:</strong> <?= e(urldecode($_SERVER['QUERY_STRING'] ?? '')) ?>
+        <strong><?= ucwords(xlat('misc:query')) ?>:</strong> <?= e(urldecode($_SERVER['QUERY_STRING'] ?? '')) ?>
     </div>
 
     <div>
-        <strong>Version:</strong> <?= raw(Configuration::getVersion()) ?>
+        <strong><?= ucwords(xlat('misc:version')) ?>:</strong> <?= raw(Configuration::getVersion()) ?>
     </div>
 
     <div>
-        <strong>OS:</strong> <?= raw(PHP_OS_FAMILY) ?>
+        <strong><?= ucwords(xlat('misc:os')) ?>:</strong> <?= raw(PHP_OS_FAMILY) ?>
     </div>
 
     <div>
-        <strong>PHP:</strong> <?= raw(PHP_VERSION ?: 'Unknown') ?>
+        <strong>PHP:</strong> <?= raw(PHP_VERSION ?: ucwords(xlat('misc:unknown'))) ?>
     </div>
 
     <br>
 
-    <a href="/">Go back</a>
+    <a href="/"><?= ucwords(xlat('misc:go_back')) ?></a>
 </div>
 

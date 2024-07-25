@@ -163,7 +163,7 @@ function getSimpleHTMLDOM(
 ) {
     $html = getContents($url, $header ?? [], $opts ?? []);
     if ($html === '') {
-        throw new \Exception('Unable to parse dom because the http response was the empty string');
+        throw new \Exception(xlat('errors:dom_empty'));
     }
     return str_get_html(
         $html,

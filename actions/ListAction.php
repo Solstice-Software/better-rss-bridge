@@ -14,7 +14,9 @@ class ListAction implements ActionInterface
             $bridge = $bridgeFactory->create($bridgeClassName);
 
             $list->bridges[$bridgeClassName] = [
-                'status'        => $bridgeFactory->isEnabled($bridgeClassName) ? 'active' : 'inactive',
+                'status'        => $bridgeFactory->isEnabled($bridgeClassName)
+                                    ? xlat('misc:active')
+                                    : xlat('misc:inactive'),
                 'uri'           => $bridge->getURI(),
                 'donationUri'   => $bridge->getDonationURI(),
                 'name'          => $bridge->getName(),

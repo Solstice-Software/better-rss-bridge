@@ -18,11 +18,11 @@ class FormatFactory
     public function create(string $name): FormatAbstract
     {
         if (! preg_match('/^[a-zA-Z0-9-]*$/', $name)) {
-            throw new \InvalidArgumentException('Format name invalid!');
+            throw new \InvalidArgumentException(xlat('errors:format:invalid_name', $name));
         }
         $sanitizedName = $this->sanitizeName($name);
         if (!$sanitizedName) {
-            throw new \InvalidArgumentException(sprintf('Unknown format given `%s`', $name));
+            throw new \InvalidArgumentException(xlat('errors:format:invalid_name', $name));
         }
         $className = '\\' . $sanitizedName . 'Format';
         return new $className();

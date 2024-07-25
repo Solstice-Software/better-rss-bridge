@@ -10,7 +10,7 @@ abstract class FeedExpander extends BridgeAbstract
     public function collectExpandableDatas(string $url, $maxItems = -1)
     {
         if (!$url) {
-            throw new \Exception('There is no $url for this RSS expander');
+            throw new \Exception(xlat('errors:expander:no_url'));
         }
         $maxItems = (int) $maxItems;
         if ($maxItems === -1) {
@@ -20,7 +20,7 @@ abstract class FeedExpander extends BridgeAbstract
         $httpHeaders = ['Accept: ' . implode(', ', $accept)];
         $xmlString = getContents($url, $httpHeaders);
         if ($xmlString === '') {
-            throw new \Exception(sprintf('Unable to parse xml from `%s` because we got the empty string', $url), 10);
+            throw new \Exception(xlat('errors:expander:bad_xml_url', $url), 10);
         }
         // prepare/massage the xml to make it more acceptable
         $problematicStrings = [
@@ -35,7 +35,7 @@ abstract class FeedExpander extends BridgeAbstract
             $this->feed = $feedParser->parseFeed($xmlString);
         } catch (\Exception $e) {
             // FeedMergeBridge relies on this string
-            throw new \Exception(sprintf('Failed to parse xml from %s: %s', $url, create_sane_exception_message($e)));
+            throw new \Exception(xlat('errors:expander:bad_xml_url_msg', $url, create_sane_exception_message($e)));
         }
 
         $items = array_slice($this->feed['items'], 0, $maxItems);

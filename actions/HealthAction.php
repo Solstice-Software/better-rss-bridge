@@ -8,7 +8,7 @@ class HealthAction implements ActionInterface
     {
         $response = [
             'code' => 200,
-            'message' => 'all is good',
+            'message' => xlat('misc:all_is_good'),
         ];
         return new Response(Json::encode($response), 200, ['content-type' => 'application/json']);
     }

@@ -32,23 +32,23 @@ class DisplayAction implements ActionInterface
                     return new Response('', 304, ['last-modified' => $modificationTimeGMT . 'GMT']);
                 }
             }
-            return $cachedResponse->withHeader('rss-bridge', 'This is a cached response');
+            return $cachedResponse->withHeader('rss-bridge', xlat('errors:actions:display:cached'));
         }
 
         if (!$bridgeName) {
-            return new Response(render(__DIR__ . '/../templates/error.html.php', ['message' => 'Missing bridge parameter']), 400);
+            return new Response(render(__DIR__ . '/../templates/error.html.php', ['message' => xlat('errors:general:missing_parameter')]), 400);
         }
         $bridgeFactory = new BridgeFactory();
         $bridgeClassName = $bridgeFactory->createBridgeClassName($bridgeName);
         if (!$bridgeClassName) {
-            return new Response(render(__DIR__ . '/../templates/error.html.php', ['message' => 'Bridge not found']), 404);
+            return new Response(render(__DIR__ . '/../templates/error.html.php', ['message' => xlat('errors:general:not_found')]), 404);
         }
 
         if (!$format) {
-            return new Response(render(__DIR__ . '/../templates/error.html.php', ['message' => 'You must specify a format']), 400);
+            return new Response(render(__DIR__ . '/../templates/error.html.php', ['message' => xlat('errors:general:format')]), 400);
         }
         if (!$bridgeFactory->isEnabled($bridgeClassName)) {
-            return new Response(render(__DIR__ . '/../templates/error.html.php', ['message' => 'This bridge is not whitelisted']), 400);
+            return new Response(render(__DIR__ . '/../templates/error.html.php', ['message' => xlat('errors:general:whitelist')]), 400);
         }
 
         if (
@@ -174,7 +174,7 @@ class DisplayAction implements ActionInterface
 
         // Create a unique identifier every 24 hours
         $uniqueIdentifier = urlencode((int)(time() / 86400));
-        $title = sprintf('Bridge returned error %s! (%s)', $e->getCode(), $uniqueIdentifier);
+        $title = sprintf('%s %s! (%s)', xlat('errors:actions:display:error'), $e->getCode(), $uniqueIdentifier);
         $item->setTitle($title);
         $item->setURI(get_current_url());
         $item->setTimestamp(time());

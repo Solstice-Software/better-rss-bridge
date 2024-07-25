@@ -12,8 +12,8 @@ final class FrontpageAction implements ActionInterface
 
         foreach ($bridgeFactory->getMissingEnabledBridges() as $missingEnabledBridge) {
             $messages[] = [
-                'body' => sprintf('Warning : Bridge "%s" not found', $missingEnabledBridge),
-                'level' => 'warning'
+                'body' => xlat('errors:general:not_found_named', $missingEnabledBridge),
+                'level' => 'warning',
             ];
         }
 

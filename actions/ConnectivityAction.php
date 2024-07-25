@@ -22,7 +22,7 @@ class ConnectivityAction implements ActionInterface
     public function execute(Request $request)
     {
         if (!Debug::isEnabled()) {
-            return new Response('This action is only available in debug mode!', 403);
+            return new Response(xlat('errors:actions:display:debug_required'), 403);
         }
 
         $bridgeName = $request->get('bridge');
@@ -31,7 +31,7 @@ class ConnectivityAction implements ActionInterface
         }
         $bridgeClassName = $this->bridgeFactory->createBridgeClassName($bridgeName);
         if (!$bridgeClassName) {
-            return new Response('Bridge not found', 404);
+            return new Response(xlat('errors:general:not_found'), 404);
         }
         return $this->reportBridgeConnectivity($bridgeClassName);
     }
@@ -39,7 +39,7 @@ class ConnectivityAction implements ActionInterface
     private function reportBridgeConnectivity($bridgeClassName)
     {
         if (!$this->bridgeFactory->isEnabled($bridgeClassName)) {
-            throw new \Exception('Bridge is not whitelisted!');
+            throw new \Exception(xlat('errors:general:whitelist'));
         }
 
         $bridge = $this->bridgeFactory->create($bridgeClassName);

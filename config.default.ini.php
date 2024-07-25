@@ -45,6 +45,9 @@ enable_debug_mode = false
 ; Whether to enable maintenance mode. If enabled, feed requests receive 503 Service Unavailable
 enable_maintenance_mode = false
 
+; The default language to use for the application's web UI (locale and region; e.g. 'en-US').
+app_language = en-US
+
 [http]
 ; Operation timeout in seconds
 timeout = 15
@@ -57,6 +60,10 @@ useragent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101 
 
 ; Max http response size in MB
 max_filesize = 20
+
+; The default language to use in requests (locale and region; e.g. 'en-US').
+;   Some bridges might manually override this setting to do things like bypass CloudFlare.
+accept_language = en-US
 
 [cache]
 

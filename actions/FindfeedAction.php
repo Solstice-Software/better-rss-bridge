@@ -13,10 +13,10 @@ class FindfeedAction implements ActionInterface
         $format = $request->get('format');
 
         if (!$url) {
-            return new Response('You must specify a url', 400);
+            return new Response(xlat('errors:general:specify_url'), 400);
         }
         if (!$format) {
-            return new Response('You must specify a format', 400);
+            return new Response(xlat('errors:general:specify_format'), 400);
         }
 
         $bridgeFactory = new BridgeFactory();
@@ -69,7 +69,7 @@ class FindfeedAction implements ActionInterface
             $results[] = $content;
         }
         if ($results === []) {
-            return new Response(Json::encode(['message' => 'No bridge found for given url']), 404, ['content-type' => 'application/json']);
+            return new Response(Json::encode(['message' => xlat('errors:general:not_found_for_url')]), 404, ['content-type' => 'application/json']);
         }
         return new Response(Json::encode($results), 200, ['content-type' => 'application/json']);
     }
@@ -82,7 +82,7 @@ class FindfeedAction implements ActionInterface
         } else if (isset($bridge::PARAMETERS['global'][$key]['name'])) {
             $name = $bridge::PARAMETERS['global'][$key]['name'];
         } else {
-            $name = 'Variable "' . $key . '" (No name provided)';
+            $name = xlat('errors:actions:findfeed:no_name_var', $key);
         }
         return $name;
     }

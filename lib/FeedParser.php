@@ -23,7 +23,7 @@ final class FeedParser
             if ($xmlErrors) {
                 $firstXmlErrorMessage = $xmlErrors[0]->message;
             }
-            throw new \Exception(sprintf('Unable to parse xml: %s', $firstXmlErrorMessage ?? ''));
+            throw new \Exception(xlat('errors:parser:bad_xml_msg', $firstXmlErrorMessage ?? ''));
         }
         $feed = [
             'title'     => null,
@@ -79,7 +79,7 @@ final class FeedParser
                 $feed['items'][] = $this->parseAtomItem($item);
             }
         } else {
-            throw new \Exception('Unable to detect feed format');
+            throw new \Exception(xlat('errors:parser:feed_format'));
         }
 
         return $feed;

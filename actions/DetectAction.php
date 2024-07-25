@@ -8,10 +8,10 @@ class DetectAction implements ActionInterface
         $format = $request->get('format');
 
         if (!$url) {
-            return new Response(render(__DIR__ . '/../templates/error.html.php', ['message' => 'You must specify a url']));
+            return new Response(render(__DIR__ . '/../templates/error.html.php', ['message' => xlat('errors:general:specify_url')]));
         }
         if (!$format) {
-            return new Response(render(__DIR__ . '/../templates/error.html.php', ['message' => 'You must specify a format']));
+            return new Response(render(__DIR__ . '/../templates/error.html.php', ['message' => xlat('errors:general:specify_format')]));
         }
 
         $bridgeFactory = new BridgeFactory();
@@ -39,7 +39,7 @@ class DetectAction implements ActionInterface
         }
 
         return new Response(render(__DIR__ . '/../templates/error.html.php', [
-            'message' => 'No bridge found for given URL: ' . $url,
+            'message' => xlat('errors:general:not_found_for_url') . ': ' . $url,
         ]));
     }
 }

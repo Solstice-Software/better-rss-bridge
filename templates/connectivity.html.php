@@ -23,7 +23,7 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <input type="text" class="form-control" id="search" onkeyup="search()" placeholder="Search for bridge..">
+    <input type="text" class="form-control" id="search" onkeyup="search()" placeholder="<?= xlat('connectivity:search_for_bridge') ?>">
 </div>
 </body>
 </html>
