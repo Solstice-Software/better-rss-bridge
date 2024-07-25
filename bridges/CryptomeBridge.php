@@ -6,13 +6,17 @@ class CryptomeBridge extends BridgeAbstract
     const NAME = 'Cryptome';
     const URI = 'https://cryptome.org/';
     const CACHE_TIMEOUT = 21600; // 6h
-    const DESCRIPTION = 'Returns the N most recent documents.';
-    const PARAMETERS = [ [
+    const DESCRIPTION = [
+        'en-US' => 'Returns the N most recent documents.',
+    ];
+    const PARAMETERS = [[
         'n' => [
-            'name' => 'number of elements',
+            'name' => [
+                'en-US' => 'number of elements',
+            ],
             'type' => 'number',
             'required' => true,
-            'exampleValue' => 10
+            'exampleValue' => 10,
         ]
     ]];
 
