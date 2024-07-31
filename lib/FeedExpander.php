@@ -7,7 +7,7 @@ abstract class FeedExpander extends BridgeAbstract
 {
     private array $feed;
 
-    public function collectExpandableDatas(string $url, $maxItems = -1)
+    public function collectExpandableDatas(string $url, $maxItems = -1, $headers = [])
     {
         if (!$url) {
             throw new \Exception(xlat('errors:expander:no_url'));
@@ -17,7 +17,7 @@ abstract class FeedExpander extends BridgeAbstract
             $maxItems = 999;
         }
         $accept = [MrssFormat::MIME_TYPE, AtomFormat::MIME_TYPE, '*/*'];
-        $httpHeaders = ['Accept: ' . implode(', ', $accept)];
+        $httpHeaders = array_merge(['Accept: ' . implode(', ', $accept)], $headers);
         $xmlString = getContents($url, $httpHeaders);
         if ($xmlString === '') {
             throw new \Exception(xlat('errors:expander:bad_xml_url', $url), 10);
